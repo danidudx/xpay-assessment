@@ -197,11 +197,54 @@ src/
 ### Design Decisions
 
 1. **In-Memory Storage**: Uses Map for order storage and queue management
+
+   - Provides fast read/write operations
+   - Suitable for prototype and development environments
+   - Data is not persisted across server restarts
+
 2. **Modular Architecture**: Separates concerns into controllers, models, and routes
+
+   - Improves code maintainability and testability
+   - Enables easier feature additions and modifications
+   - Follows the Single Responsibility Principle
+
 3. **Automatic Port Selection**: Finds available port automatically
+
+   - Prevents port conflicts in development environments
+   - Enables multiple instances to run simultaneously
+   - Falls back to next available port if default is occupied
+
 4. **Input Validation**: Validates all incoming requests
+
+   - Ensures data integrity and consistency
+   - Prevents invalid data from entering the system
+   - Provides clear error messages for invalid inputs
+
 5. **Queue-based Processing**: Implements FIFO order processing
+   - Ensures fair order processing
+   - Prevents system overload
+   - Enables future implementation of priority queues
 
-## License
+### Implementation Assumptions
 
-MIT
+1. **Data Persistence**
+
+   - Data is stored in-memory and will be lost on server restart
+   - No transaction support or rollback capabilities
+   - Suitable for development and testing purposes
+
+2. **Authentication & Authorization**
+
+   - No authentication required (can be added as needed)
+   - All endpoints are publicly accessible
+   - Suitable for internal network usage
+
+3. **Error Handling**
+
+   - All errors are logged and returned with appropriate HTTP status codes
+   - No retry mechanism for failed operations
+   - Client is responsible for handling retries
+
+4. **System Boundaries**
+   - No external service dependencies
+   - Suitable for small to medium-sized e-commerce operations
