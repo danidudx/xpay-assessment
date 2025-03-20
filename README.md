@@ -7,7 +7,7 @@ A RESTful API for managing e-commerce orders with inventory tracking and order p
 - Create, read, update, and cancel orders
 - Inventory management system
 - Order processing queue
-- Pagination and filtering for orders
+- Pagination & filteration for lists
 - Input validation
 - Error handling
 - Automatic port selection
@@ -74,64 +74,17 @@ A RESTful API for managing e-commerce orders with inventory tracking and order p
 #### Get All Orders
 
 - **GET** `/api/orders`
-- Returns a paginated list of orders with optional filtering
-
-**Query Parameters:**
-
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 10, max: 100)
-- `status` (optional): Filter by order status ("pending", "processed", "cancelled")
-
-**Response:** `200 OK`
-
-```json
-{
-  "orders": [
-    {
-      "id": "order123",
-      "customerInfo": {
-        "name": "John Doe",
-        "email": "john@example.com"
-      },
-      "products": [...],
-      "status": "pending",
-      "createdAt": "2023-01-01T00:00:00.000Z"
-    }
-  ],
-  "pagination": {
-    "total": 50,
-    "page": 1,
-    "limit": 10,
-    "totalPages": 5
-  }
-}
-```
+- Returns a list of all orders
 
 #### Get Specific Order
 
 - **GET** `/api/orders/:id`
 - Returns details of a specific order
 
-**Response:** `200 OK`
-
-```json
-{
-  "id": "order123",
-  "customerInfo": {
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "products": [...],
-  "status": "pending",
-  "createdAt": "2023-01-01T00:00:00.000Z"
-}
-```
-
 #### Update Order
 
 - **PATCH** `/api/orders/:id`
 - Updates an existing order
-- Only pending orders can be updated
 
 **Request Body:**
 
@@ -145,51 +98,15 @@ A RESTful API for managing e-commerce orders with inventory tracking and order p
 }
 ```
 
-**Response:** `200 OK`
-
-```json
-{
-  "id": "order123",
-  "customerInfo": {
-    "name": "Updated Name",
-    "email": "john@example.com"
-  },
-  "products": [...],
-  "status": "pending",
-  "updatedAt": "2023-01-02T00:00:00.000Z"
-}
-```
-
 #### Cancel Order
 
 - **DELETE** `/api/orders/:id`
 - Cancels a specific order
 
-**Response:** `200 OK`
-
-```json
-{
-  "message": "Order cancelled successfully"
-}
-```
-
 #### Process Next Order
 
 - **POST** `/api/orders/process-next`
 - Processes the next order in the queue
-
-**Response:** `200 OK`
-
-```json
-{
-  "message": "Order processed successfully",
-  "order": {
-    "id": "order123",
-    "status": "processed",
-    ...
-  }
-}
-```
 
 ### Inventory
 
@@ -202,19 +119,6 @@ A RESTful API for managing e-commerce orders with inventory tracking and order p
 
 - **POST** `/api/inventory/check-availability`
 - Checks if products are available in inventory
-
-**Request Body:**
-
-```json
-{
-  "products": [
-    {
-      "id": "product123",
-      "quantity": 2
-    }
-  ]
-}
-```
 
 #### Update Inventory
 
@@ -239,14 +143,6 @@ Error responses include a message explaining the error:
 }
 ```
 
-Common error scenarios:
-
-- Invalid pagination parameters
-- Order not found
-- Invalid order data
-- Cannot update non-pending orders
-- Insufficient inventory
-
 ## Development
 
 ### Project Structure
@@ -268,9 +164,3 @@ src/
 3. **Automatic Port Selection**: Finds available port automatically
 4. **Input Validation**: Validates all incoming requests
 5. **Queue-based Processing**: Implements FIFO order processing
-6. **Pagination**: Efficient data retrieval with customizable page size
-7. **Status Filtering**: Easy order tracking by status
-
-## License
-
-MIT

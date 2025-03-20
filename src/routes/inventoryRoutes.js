@@ -16,6 +16,16 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// Get single inventory item
+router.get("/:id", async (req, res, next) => {
+  try {
+    const item = inventoryController.getInventoryItem(req.params.id);
+    res.json(item);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Check product availability
 router.post("/check-availability", async (req, res, next) => {
   try {
@@ -28,8 +38,31 @@ router.post("/check-availability", async (req, res, next) => {
   }
 });
 
-// Update inventory quantities
-router.post("/update", async (req, res, next) => {
+// Update inventory quantities (decrease)
+router.patch("/:id", async (req, res, next) => {
+  try {
+    const updated = inventoryController.updateInventoryQuantity(
+      req.params.id,
+      req.body.quantity
+    );
+    res.json({ success: updated });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Restock inventory (increase quantities)
+router.post("/restock", async (req, res, next) => {
+  try {
+    const restocked = inventoryController.restockInventory(req.body.products);
+    res.json({ success: restocked });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Bulk update inventory quantities
+router.patch("/", async (req, res, next) => {
   try {
     const updated = inventoryController.updateInventoryQuantities(
       req.body.products

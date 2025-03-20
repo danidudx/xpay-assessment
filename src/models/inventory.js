@@ -26,9 +26,12 @@ class InventoryManager {
       if (!product) {
         throw new NotFoundError(`Product ${item.productId} not found`);
       }
+      if (item.quantity < 0) {
+        throw new Error(`Invalid quantity for product ${product.name}`);
+      }
       if (product.quantity < item.quantity) {
         throw new InsufficientStockError(
-          `Insufficient quantity for product ${product.name}`
+          `Insufficient quantity for product ${product.name}. Available: ${product.quantity}, Requested: ${item.quantity}`
         );
       }
     }
@@ -41,12 +44,39 @@ class InventoryManager {
       if (!product) {
         throw new NotFoundError(`Product ${item.productId} not found`);
       }
-      product.quantity -= item.quantity;
+      const newQuantity = product.quantity - item.quantity;
+      if (newQuantity < 0) {
+        throw new InsufficientStockError(
+          `Cannot update inventory for ${product.name}. Available: ${product.quantity}, Requested: ${item.quantity}`
+        );
+      }
+      product.quantity = newQuantity;
+    });
+  }
+
+  restockInventory(products) {
+    products.forEach((item) => {
+      const product = this.inventory.get(item.productId);
+      if (!product) {
+        throw new NotFoundError(`Product ${item.productId} not found`);
+      }
+      if (item.quantity < 0) {
+        throw new Error(`Invalid restock quantity for product ${product.name}`);
+      }
+      product.quantity += item.quantity;
     });
   }
 
   getInventory() {
     return Array.from(this.inventory.values());
+  }
+
+  getProduct(productId) {
+    const product = this.inventory.get(productId);
+    if (!product) {
+      throw new NotFoundError(`Product ${productId} not found`);
+    }
+    return product;
   }
 }
 
