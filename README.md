@@ -7,7 +7,7 @@ A RESTful API for managing e-commerce orders with inventory tracking and order p
 - Create, read, update, and cancel orders
 - Inventory management system
 - Order processing queue
-- Pagination & filteration for lists
+- Pagination & Filteration
 - Input validation
 - Error handling
 - Automatic port selection
@@ -74,7 +74,44 @@ A RESTful API for managing e-commerce orders with inventory tracking and order p
 #### Get All Orders
 
 - **GET** `/api/orders`
-- Returns a list of all orders
+- Returns a list of all orders with pagination and filtering support
+
+**Query Parameters:**
+
+- `page` (optional): Page number for pagination (default: 1)
+- `limit` (optional): Number of items per page (default: 10)
+- `status` (optional): Filter orders by status (e.g., 'pending', 'processing', 'completed', 'cancelled')
+
+**Example Request:**
+
+```
+GET /api/orders?page=2&limit=10&status=pending
+```
+
+**Response:** `200 OK`
+
+```json
+{
+  "data": [
+    {
+      "id": "order123",
+      "customerInfo": {
+        "name": "John Doe",
+        "email": "john@example.com"
+      },
+      "products": [...],
+      "status": "pending",
+      "createdAt": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "currentPage": 2,
+    "totalPages": 5,
+    "totalItems": 48,
+    "itemsPerPage": 10
+  }
+}
+```
 
 #### Get Specific Order
 
@@ -164,3 +201,7 @@ src/
 3. **Automatic Port Selection**: Finds available port automatically
 4. **Input Validation**: Validates all incoming requests
 5. **Queue-based Processing**: Implements FIFO order processing
+
+## License
+
+MIT
